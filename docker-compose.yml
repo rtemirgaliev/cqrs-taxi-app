@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+
+  discovery:
+    build: discovery
+    container_name: discovery
+    ports:
+      - "8761:8761"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  order-command:
+    build: order-command
+    depends_on:
+        - rabbitmq
+        - discovery
+#    container_name: order-command
+#    ports:
+#      - "9090:9090"
+
+
+  order-query:
+    build: order-query
+    depends_on:
+        - rabbitmq
+        - discovery
+        - order-command
+#    container_name: order-query
+#    ports:
+#      - "9191:9191"
+
+
+

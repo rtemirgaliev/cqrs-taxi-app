@@ -1,0 +1,29 @@
+server:
+  port: 9090
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: order-command
+  rabbitmq:
+    host: rabbitmq
+
+logging:
+  level:
+    com:
+      epam: DEBUG
+
+axon:
+  amqp:
+    exchange: TaxiOrderExchange
+  distributed:
+    enabled: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/

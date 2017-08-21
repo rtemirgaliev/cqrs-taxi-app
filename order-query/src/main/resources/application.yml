@@ -1,0 +1,29 @@
+logging:
+  level:
+    com:
+      epam: DEBUG
+
+server:
+  port: 9191
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: order-query
+  rabbitmq:
+    host: rabbitmq
+
+axon:
+  eventhandling:
+    processors:
+      taxiOrderEvents:
+        source: taxiOrderEvents
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://discovery:8761/eureka/
