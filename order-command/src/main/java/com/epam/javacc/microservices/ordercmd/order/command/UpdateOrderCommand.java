@@ -1,4 +1,4 @@
-package com.epam.javacc.microservices.ordercmd.command;
+package com.epam.javacc.microservices.ordercmd.order.command;
 
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
 import org.axonframework.commandhandling.TargetAggregateIdentifier;
@@ -11,24 +11,26 @@ import java.util.UUID;
  *
  * @author Rinat Temirgaliev
  */
-public class CreateOrderCommand {
+public class UpdateOrderCommand {
 
     @TargetAggregateIdentifier
+    @NotNull
+    @NotBlank
     private String orderId;
     @NotNull
     @NotBlank
     private String businessKey;
     @NotNull(message = "Phone is mandatory")
-    @NotBlank(message = "Phone can not be blank")
+    @NotBlank(message = "Phone is mandatory")
     private String phone;
     @NotNull(message = "Address is mandatory")
-    @NotBlank(message = "Address can not be blank")
+    @NotBlank(message = "Address is mandatory")
     private String address;
     @NotNull
     private OrderStatus status;
 
-    public CreateOrderCommand(String businessKey, String phone, String address, OrderStatus status) {
-        this.orderId = UUID.randomUUID().toString();
+    public UpdateOrderCommand(String orderId, String businessKey, String phone, String address, OrderStatus status) {
+        this.orderId = orderId;
         this.businessKey = businessKey;
         this.phone = phone;
         this.address = address;

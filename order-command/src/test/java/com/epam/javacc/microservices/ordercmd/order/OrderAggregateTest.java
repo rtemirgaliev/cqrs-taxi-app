@@ -1,9 +1,10 @@
-package com.epam.javacc.microservices.ordercmd.aggregate;
+package com.epam.javacc.microservices.ordercmd.order;
 
 import com.epam.javacc.microservices.common.order.event.OrderCreatedEvent;
 import com.epam.javacc.microservices.common.order.event.OrderUpdatedEvent;
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
-import com.epam.javacc.microservices.ordercmd.command.UpdateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.OrderAggregate;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;

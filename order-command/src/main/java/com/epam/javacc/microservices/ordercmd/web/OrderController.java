@@ -1,13 +1,12 @@
 package com.epam.javacc.microservices.ordercmd.web;
 
-import com.epam.javacc.microservices.ordercmd.command.CreateOrderCommand;
-import com.epam.javacc.microservices.ordercmd.command.UpdateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;

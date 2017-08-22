@@ -1,11 +1,11 @@
-package com.epam.javacc.microservices.ordercmd.aggregate;
+package com.epam.javacc.microservices.ordercmd.order;
 
 
 import com.epam.javacc.microservices.common.order.event.OrderCreatedEvent;
 import com.epam.javacc.microservices.common.order.event.OrderUpdatedEvent;
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
-import com.epam.javacc.microservices.ordercmd.command.CreateOrderCommand;
-import com.epam.javacc.microservices.ordercmd.command.UpdateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -58,7 +58,7 @@ public class OrderAggregate {
     }
 
     @CommandHandler
-    public void updateOrder(UpdateOrderCommand command) {
+    public void handle(UpdateOrderCommand command) {
         LOG.debug("Command: 'UpdateOrderCommand' received.");
         apply(new OrderUpdatedEvent(command.getOrderId(), command.getBusinessKey(),
                 command.getPhone(), command.getAddress(), command.getStatus()));
@@ -93,10 +93,6 @@ public class OrderAggregate {
         LOG.debug("Applied: 'OrderUpdatedEvent' [{}]", this.orderId);
     }
 
-
-    public static Logger getLOG() {
-        return LOG;
-    }
 
     public String getOrderId() {
         return orderId;
