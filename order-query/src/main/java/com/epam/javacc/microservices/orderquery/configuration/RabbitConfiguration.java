@@ -28,9 +28,9 @@ public class RabbitConfiguration {
 
             @RabbitListener(
                     bindings = @QueueBinding(
-                    value = @Queue,
-                    exchange = @Exchange(value = "TaxiOrderExchange", type = ExchangeTypes.FANOUT),
-                    key = "*"
+                            value = @Queue,
+                            exchange = @Exchange(value = "TaxiOrderExchange", type = ExchangeTypes.FANOUT),
+                            key = "*"
                     )
             )
             @Override

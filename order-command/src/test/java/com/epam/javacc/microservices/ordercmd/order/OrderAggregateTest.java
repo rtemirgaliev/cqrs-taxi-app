@@ -21,18 +21,18 @@ public class OrderAggregateTest {
     }
 
     @Test
-    public void UpdateOrderCommandIssuesOrderUpdatedEvent() {
+    public void UpdateOrderCommandGeneratesOrderUpdatedEvent() {
         fixture.given(new OrderCreatedEvent("1",
                         "NEW", "111-111",
                         "addr 1", OrderStatus.NEW))
                 .when(new UpdateOrderCommand("1",
                                 "bbb", "222-222",
-                                "addr 2", OrderStatus.CREATED)
+                                "addr 2", OrderStatus.IN_PROGESS)
                         )
                 .expectSuccessfulHandlerExecution()
                 .expectEvents( new OrderUpdatedEvent("1",
                                 "bbb", "222-222",
-                                "addr 2", OrderStatus.CREATED)
+                                "addr 2", OrderStatus.IN_PROGESS)
                 );
     }
 

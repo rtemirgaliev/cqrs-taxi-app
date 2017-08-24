@@ -1,11 +1,13 @@
 package com.epam.javacc.microservices.orderquery.handler;
 
 import com.epam.javacc.microservices.common.order.event.OrderCreatedEvent;
+import com.epam.javacc.microservices.common.order.event.OrderStatusChangedEvent;
 import com.epam.javacc.microservices.common.order.event.OrderUpdatedEvent;
 import com.epam.javacc.microservices.orderquery.domain.Order;
 import com.epam.javacc.microservices.orderquery.repository.OrderRepository;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.eventsourcing.SequenceNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,5 +40,14 @@ public class OrderViewEventHandler {
         order.setStatus(event.getStatus());
         orderRepository.save(order);
     }
+
+    @EventHandler
+    public void handle(OrderStatusChangedEvent event) {
+        LOG.info("OrderStatusChangedEvent: [{}] ", event.getOrderId());
+        Order order = orderRepository.findOne(event.getOrderId());
+        order.setStatus(event.getStatus());
+        orderRepository.save(order);
+    }
+
 
 }

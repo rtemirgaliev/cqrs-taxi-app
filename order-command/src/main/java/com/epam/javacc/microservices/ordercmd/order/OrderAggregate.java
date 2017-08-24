@@ -2,8 +2,10 @@ package com.epam.javacc.microservices.ordercmd.order;
 
 
 import com.epam.javacc.microservices.common.order.event.OrderCreatedEvent;
+import com.epam.javacc.microservices.common.order.event.OrderStatusChangedEvent;
 import com.epam.javacc.microservices.common.order.event.OrderUpdatedEvent;
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
+import com.epam.javacc.microservices.ordercmd.order.command.ChangeOrderStatusCommand;
 import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
 import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
 import org.axonframework.commandhandling.CommandHandler;
@@ -64,6 +66,12 @@ public class OrderAggregate {
                 command.getPhone(), command.getAddress(), command.getStatus()));
     }
 
+    @CommandHandler
+    public void handle(ChangeOrderStatusCommand command) {
+        LOG.debug("Command: 'ChangeOrdersStatusCommand' received.");
+        apply(new OrderStatusChangedEvent(command.getOrderId(), command.getStatus(), command.getTransactionId()));
+    }
+
     /**
      * This method is marked as an EventSourcingHandler and is therefore used by the Axon
      * framework to handle events of the specified type (OrderCreatedEvent). The
@@ -85,12 +93,17 @@ public class OrderAggregate {
 
     @EventSourcingHandler
     public void on(OrderUpdatedEvent event) {
-        assert( event.getOrderId().equals(this.orderId) );
         this.businessKey = event.getBusinessKey();
         this.phone = event.getPhone();
         this.address = event.getAddress();
         this.status = event.getStatus();
         LOG.debug("Applied: 'OrderUpdatedEvent' [{}]", this.orderId);
+    }
+
+    @EventSourcingHandler
+    public void on(OrderStatusChangedEvent event) {
+        this.status = event.getStatus();
+        LOG.debug("Applied: 'OrderStatusChangedEvent' [{}]", this.orderId);
     }
 
 

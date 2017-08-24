@@ -1,6 +1,10 @@
 package com.epam.javacc.microservices.ordercmd.assignment.event;
 
-public class AssignOrderCancelledEvent {
+import java.io.Serializable;
+
+public class AssignOrderCancelledEvent implements Serializable{
+
+    private static final long serialVersionUID = -6279072922619997448L;
 
     private final String assignmentId;
 

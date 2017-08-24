@@ -10,25 +10,25 @@ public class CreateDriverCommand {
 
     @TargetAggregateIdentifier
     private String driverId;
-    @NotNull(message = "Name is mandatory")
-    @NotBlank(message = "Name can not be blank")
-    private String name;
+    @NotNull(message = "Full Name is mandatory")
+    @NotBlank(message = "Full Name can not be blank")
+    private String fullName;
 
     public CreateDriverCommand(String name) {
         this.driverId = UUID.randomUUID().toString();
-        this.name = name;
+        this.fullName = name;
     }
 
-    //This constructor with  ID only need us for test purposes. Consider removing
+    //TODO This constructor with  ID only need us for test purposes. Consider removing
     public CreateDriverCommand(String driverId, String name) {
         this.driverId = driverId;
-        this.name = name;
+        this.fullName = name;
     }
 
     public String getDriverId() {
         return driverId;
     }
-    public String getName() {
-        return name;
+    public String getFullName() {
+        return fullName;
     }
 }

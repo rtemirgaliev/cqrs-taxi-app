@@ -9,28 +9,28 @@ public class DriverCreatedEvent implements Serializable {
     private static final long serialVersionUID = 7534361014002829485L;
 
     private String driverId;
-    private String name;
-    private DriverStatus status;
+    private String fullName;
+    private DriverStatus driverStatus;
     private String assignedOrderId;
 
     public DriverCreatedEvent() {
     }
 
-    public DriverCreatedEvent(String driverId, String name, DriverStatus status, String assingnedOrderId) {
+    public DriverCreatedEvent(String driverId, String fullName, DriverStatus driverStatus, String assignedOrderId) {
         this.driverId = driverId;
-        this.name = name;
-        this.status = status;
-        this.assignedOrderId = assingnedOrderId;
+        this.fullName = fullName;
+        this.driverStatus = driverStatus;
+        this.assignedOrderId = assignedOrderId;
     }
 
     public String getDriverId() {
         return driverId;
     }
     public String getName() {
-        return name;
+        return fullName;
     }
     public DriverStatus getStatus() {
-        return status;
+        return driverStatus;
     }
     public String getAssignedOrderId() {
         return assignedOrderId;

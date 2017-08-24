@@ -1,26 +1,26 @@
 package com.epam.javacc.microservices.ordercmd.driver.command;
 
-import com.epam.javacc.microservices.common.driver.model.DriverStatus;
 import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
-public class ChangeDriverStatusCommand {
+public class ChangeDriverOrderCommand {
 
     @TargetAggregateIdentifier
     private String driverId;
-    private DriverStatus driverStatus;
+    private String assignedOrderId;
     private String transactionId;
 
-    public ChangeDriverStatusCommand(String driverId, DriverStatus driverStatus, String transactionId) {
+    public ChangeDriverOrderCommand(String driverId, String assignedOrderId, String assignmentId) {
         this.driverId = driverId;
-        this.driverStatus = driverStatus;
-        this.transactionId = transactionId;
+        this.assignedOrderId = assignedOrderId;
+        this.transactionId = assignmentId;
     }
+
 
     public String getDriverId() {
         return driverId;
     }
-    public DriverStatus getDriverStatus() {
-        return driverStatus;
+    public String getAssignedOrderId() {
+        return assignedOrderId;
     }
     public String getTransactionId() {
         return transactionId;

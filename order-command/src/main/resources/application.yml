@@ -8,7 +8,7 @@ spring:
   application:
     name: order-command
   rabbitmq:
-    host: rabbitmq
+    host: ${rabbitmq-host}
 
 logging:
   level:
@@ -26,4 +26,4 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
+      defailtZone: http://${discovery-host}:8761/eureka/

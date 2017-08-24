@@ -15,6 +15,7 @@ public class RequestAssignOrderCommand {
         this.driverId = driverId;
     }
 
+
     public String getAssignmentId() {
         return assignmentId;
     }

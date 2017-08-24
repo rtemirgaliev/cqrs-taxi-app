@@ -40,7 +40,7 @@ public class AxonConfiguration {
 
     /**
      * Configure connector between parts of distributed command bus
-     * We choose the implementation that uses discovery servica (Eureka) to discover peers
+     * We choose the implementation that uses discovery service (Eureka) to discover peers
      */
     @Bean
     public CommandBusConnector springHttpCommandBusConnector(@Qualifier("localSegment") CommandBus localSegment,

@@ -10,21 +10,25 @@ public class DriverStatusChangedEvent implements Serializable {
 
     private String driverId;
     private DriverStatus driverStatus;
+    private String transactionId;
 
     public DriverStatusChangedEvent() {
     }
 
-    public DriverStatusChangedEvent(String driverId, DriverStatus driverStatus) {
+    public DriverStatusChangedEvent(String driverId, DriverStatus driverStatus, String transactionId) {
         this.driverId = driverId;
         this.driverStatus = driverStatus;
+        this.transactionId = transactionId;
     }
 
 
     public String getDriverId() {
         return driverId;
     }
-
     public DriverStatus getDriverStatus() {
         return driverStatus;
+    }
+    public String getTransactionId() {
+        return transactionId;
     }
 }

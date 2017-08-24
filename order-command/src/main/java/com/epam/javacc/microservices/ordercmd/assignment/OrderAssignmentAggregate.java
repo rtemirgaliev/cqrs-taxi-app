@@ -38,6 +38,8 @@ public class OrderAssignmentAggregate {
         apply(new AssignOrderCancelledEvent(cmd.getAssignmentId()));
     }
 
+    //TODO Do not send these events to rabbit
+
     @EventSourcingHandler
     public void on(AssignOrderRequestedEvent event) {
         this.assignmentId = event.getAssignmentId();
