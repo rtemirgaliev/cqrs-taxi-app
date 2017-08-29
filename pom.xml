@@ -98,12 +98,19 @@
                 <version>${axon.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.hsqldb</groupId>-->
+                <!--<artifactId>hsqldb</artifactId>-->
+                <!--<scope>runtime</scope>-->
+                <!--<version>2.0.0</version>-->
+            <!--</dependency>-->
             <dependency>
-                <groupId>org.hsqldb</groupId>
-                <artifactId>hsqldb</artifactId>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
                 <scope>runtime</scope>
-                <version>2.0.0</version>
+                <version>1.4.196</version>
             </dependency>
+
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>

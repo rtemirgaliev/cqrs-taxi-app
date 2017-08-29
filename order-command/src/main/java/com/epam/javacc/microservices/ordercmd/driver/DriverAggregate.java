@@ -7,6 +7,7 @@ import com.epam.javacc.microservices.common.driver.model.DriverStatus;
 import com.epam.javacc.microservices.ordercmd.driver.command.ChangeDriverOrderCommand;
 import com.epam.javacc.microservices.ordercmd.driver.command.ChangeDriverStatusCommand;
 import com.epam.javacc.microservices.ordercmd.driver.command.CreateDriverCommand;
+import com.epam.javacc.microservices.ordercmd.driver.exception.WrongDriverStatusException;
 import com.epam.javacc.microservices.ordercmd.order.OrderAggregate;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
@@ -20,7 +21,7 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 @Aggregate
 public class DriverAggregate {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrderAggregate.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DriverAggregate.class);
 
     @AggregateIdentifier
     private String driverId;
@@ -34,7 +35,6 @@ public class DriverAggregate {
     @CommandHandler
     public DriverAggregate(CreateDriverCommand command) {
         LOG.debug("Command: 'CreateDriverCommand' received.");
-        LOG.debug("Queuing up a new DriverCreatedEvent for driver '{}'", command.getDriverId());
         apply(new DriverCreatedEvent(command.getDriverId(), command.getFullName(), DriverStatus.ON_VACATION, null));
     }
 
@@ -45,11 +45,15 @@ public class DriverAggregate {
     }
 
     @CommandHandler
-    public void handle(ChangeDriverOrderCommand command) {
+    public void handle(ChangeDriverOrderCommand command) throws WrongDriverStatusException {
         LOG.debug("Command: 'ChangeDriverOrderCommand' received.");
         //TODO check that driver status is empty
-        apply(new DriverOrderChangedEvent(command.getDriverId(), command.getAssignedOrderId(), command.getTransactionId()));
-        apply(new DriverStatusChangedEvent(command.getDriverId(), DriverStatus.OCCUPIED, command.getTransactionId()));
+        if (DriverStatus.EMPTY.equals(this.driverStatus)) {
+            apply(new DriverOrderChangedEvent(command.getDriverId(), command.getAssignedOrderId(), command.getTransactionId()));
+            apply(new DriverStatusChangedEvent(command.getDriverId(), DriverStatus.OCCUPIED, command.getTransactionId()));
+        } else {
+            throw new WrongDriverStatusException("The order can be assigned to driver with status EMPTY");
+        }
     }
 
     @EventSourcingHandler
@@ -58,7 +62,7 @@ public class DriverAggregate {
         this.fullName = event.getName();
         this.driverStatus = event.getStatus();
         this.assignedOrderId = event.getAssignedOrderId();
-        LOG.debug("Applied: 'DriverCreatedEvent' [{}]", this.driverId);
+        LOG.debug("Applied: 'DriverCreatedEvent' [{}] -> {}, {}, {}", this.driverId, this.fullName, this.driverStatus, this.assignedOrderId);
     }
 
     @EventSourcingHandler

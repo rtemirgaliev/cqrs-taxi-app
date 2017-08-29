@@ -2,12 +2,12 @@ package com.epam.javacc.microservices.ordercmd.assignment.command;
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
-public class CompleteAssignOrderCommand {
+public class RejectOrderAssignmentCommand {
 
     @TargetAggregateIdentifier
     private final String assignmentId;
 
-    public CompleteAssignOrderCommand(String assignmentId) {
+    public RejectOrderAssignmentCommand(String assignmentId) {
         this.assignmentId = assignmentId;
     }
 

@@ -2,6 +2,8 @@ package com.epam.javacc.microservices.ordercmd.web;
 
 import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
 import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.web.DTO.CreateOrderRequest;
+import com.epam.javacc.microservices.ordercmd.web.DTO.UpdateOrderRequest;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,7 @@ public class OrderController {
         CreateOrderCommand command = new CreateOrderCommand(request.getBusinessKey(), request.getPhone(),
                 request.getAddress(), request.getStatus());
         LOG.debug(CreateOrderCommand.class.getSimpleName() + " is sending to command gateway: Order [{}]", command.getOrderId());
-
+        //TODO Move UUID generation to controllers
         return commandGateway.send(command);
     }
 

@@ -1,4 +1,4 @@
-package com.epam.javacc.microservices.ordercmd.web;
+package com.epam.javacc.microservices.ordercmd.web.DTO;
 
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
 
@@ -6,24 +6,16 @@ import com.epam.javacc.microservices.common.order.model.OrderStatus;
  *
  * @author Rinat Temirgaliev
  */
-public class UpdateOrderRequest {
+public class CreateOrderRequest {
 
-    private String orderId;
     private String businessKey;
     private String phone;
     private String address;
     private OrderStatus status;
 
-    public UpdateOrderRequest() {
+    public CreateOrderRequest() {
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
 
     public String getBusinessKey() {
         return businessKey;

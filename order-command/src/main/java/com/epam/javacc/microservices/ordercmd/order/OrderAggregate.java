@@ -54,7 +54,6 @@ public class OrderAggregate {
     @CommandHandler
     public OrderAggregate(CreateOrderCommand command) {
         LOG.debug("Command: 'CreateOrderCommand' received.");
-        LOG.debug("Queuing up a new OrderCreatedEvent for order '{}'", command.getOrderId());
         apply(new OrderCreatedEvent(command.getOrderId(), command.getBusinessKey(),
                 command.getPhone(), command.getAddress(), command.getStatus()));
     }
@@ -88,7 +87,7 @@ public class OrderAggregate {
         this.phone = event.getPhone();
         this.address = event.getAddress();
         this.status = event.getStatus();
-        LOG.debug("Applied: 'OrderCreatedEvent' [{}]", this.orderId);
+        LOG.debug("Applied: 'OrderCreatedEvent' [{}] -> {}, {}, {}", this.orderId, this.phone, this.address, this.status);
     }
 
     @EventSourcingHandler
@@ -97,13 +96,13 @@ public class OrderAggregate {
         this.phone = event.getPhone();
         this.address = event.getAddress();
         this.status = event.getStatus();
-        LOG.debug("Applied: 'OrderUpdatedEvent' [{}]", this.orderId);
+        LOG.debug("Applied: 'OrderUpdatedEvent' [{}] -> {}, {}, {}", this.orderId, this.phone, this.address, this.status);
     }
 
     @EventSourcingHandler
     public void on(OrderStatusChangedEvent event) {
         this.status = event.getStatus();
-        LOG.debug("Applied: 'OrderStatusChangedEvent' [{}]", this.orderId);
+        LOG.debug("Applied: 'OrderStatusChangedEvent' [{}] -> {}", this.orderId, this.getStatus());
     }
 
 

@@ -1,7 +1,9 @@
 package com.epam.javacc.microservices.ordercmd;
 
+import com.epam.javacc.microservices.common.driver.model.DriverStatus;
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
-import com.epam.javacc.microservices.ordercmd.assignment.command.RequestAssignOrderCommand;
+import com.epam.javacc.microservices.ordercmd.assignment.command.StartOrderAssignmentCommand;
+import com.epam.javacc.microservices.ordercmd.driver.command.ChangeDriverStatusCommand;
 import com.epam.javacc.microservices.ordercmd.driver.command.CreateDriverCommand;
 import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -10,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -48,8 +49,9 @@ public class Application {
         CommandGateway commandGateway = context.getBean(CommandGateway.class);
 
         commandGateway.send(new CreateDriverCommand("d1", "Speedy Driver"));
+        commandGateway.send(new ChangeDriverStatusCommand("d1", DriverStatus.OCCUPIED, "tr999"));
         commandGateway.send(new CreateOrderCommand("o1", "new", "111-222", "Red Square", OrderStatus.PUBLISHED));
-        commandGateway.send(new RequestAssignOrderCommand("a1", "o1", "d1"));
+        commandGateway.send(new StartOrderAssignmentCommand("a1", "o1", "d1"));
     }
 
 }

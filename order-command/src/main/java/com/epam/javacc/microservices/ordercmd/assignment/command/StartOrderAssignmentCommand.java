@@ -1,20 +1,20 @@
-package com.epam.javacc.microservices.ordercmd.assignment.event;
+package com.epam.javacc.microservices.ordercmd.assignment.command;
 
-import java.io.Serializable;
+import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
-public class AssignOrderRequestedEvent implements Serializable {
+public class StartOrderAssignmentCommand {
 
-    private static final long serialVersionUID = -362818361432688137L;
-
+    @TargetAggregateIdentifier
     private final String assignmentId;
     private final String orderId;
     private final String driverId;
 
-    public AssignOrderRequestedEvent(String assignmentId, String orderId, String driverId) {
+    public StartOrderAssignmentCommand(String assignmentId, String orderId, String driverId) {
         this.assignmentId = assignmentId;
         this.orderId = orderId;
         this.driverId = driverId;
     }
+
 
     public String getAssignmentId() {
         return assignmentId;
