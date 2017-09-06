@@ -5,7 +5,6 @@ logging:
 #    org:
 #      axonframework: DEBUG
 
-
 server:
   port: 9191
 
@@ -25,8 +24,8 @@ spring:
 axon:
   eventhandling:
     processors:
-      taxiOrderEvents:
-        source: taxiOrderEvents
+      taxiExchange:
+        source: taxiExchange
 
 eureka:
   instance:

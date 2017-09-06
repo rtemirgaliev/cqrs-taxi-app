@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>driver-command</artifactId>
+    <packaging>jar</packaging>
+    <name>driver-command</name>
+    <description>Taxi Driver Microservice - Command side</description>
+
+    <parent>
+        <artifactId>cqrs-taxi-app-parent</artifactId>
+        <groupId>com.epam.javacc.microservices</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <start-class>com.epam.javacc.microservices.drivercmd.Application</start-class>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.epam.javacc.microservices</groupId>
+            <artifactId>order-common</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.axonframework</groupId>-->
+        <!--<artifactId>axon-distributed-commandbus</artifactId>-->
+        <!--&lt;!&ndash;<version></version>&ndash;&gt;-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-distributed-commandbus-springcloud</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.hsqldb</groupId>-->
+        <!--<artifactId>hsqldb</artifactId>-->
+        <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>${project.name}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+
+</project>

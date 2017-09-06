@@ -46,11 +46,15 @@
             <!--<artifactId>axon-distributed-commandbus</artifactId>-->
             <!--&lt;!&ndash;<version></version>&ndash;&gt;-->
         <!--</dependency>-->
+
+
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-distributed-commandbus-springcloud</artifactId>
             <version>3.0.5</version>
         </dependency>
+
+
         <!--<dependency>-->
             <!--<groupId>org.hsqldb</groupId>-->
             <!--<artifactId>hsqldb</artifactId>-->

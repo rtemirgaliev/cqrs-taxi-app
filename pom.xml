@@ -16,6 +16,7 @@
         <module>order-command</module>
         <module>order-query</module>
         <module>discovery</module>
+        <module>driver-command</module>
     </modules>
 
     <properties>

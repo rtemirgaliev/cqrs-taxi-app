@@ -25,7 +25,6 @@ services:
 #    ports:
 #      - "9090:9090"
 
-
   order-query:
     build: order-query
     depends_on:
@@ -36,5 +35,13 @@ services:
 #    ports:
 #      - "9191:9191"
 
+  driver-command:
+    build: driver-command
+    depends_on:
+        - rabbitmq
+        - discovery
+#    container_name: driver-command
+#    ports:
+#      - "9292:9292"
 
 

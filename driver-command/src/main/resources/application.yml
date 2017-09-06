@@ -6,14 +6,14 @@ logging:
 #      axonframework: DEBUG
 
 server:
-  port: 9090
+  port: 9292
 
 spring:
   output:
     ansi:
       enabled: always
   application:
-    name: order-command
+    name: driver-command
   rabbitmq:
     host: ${rabbitmq-host}
   h2:

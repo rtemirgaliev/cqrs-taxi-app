@@ -1,12 +1,11 @@
 package com.epam.javacc.microservices.ordercmd.order;
 
 
-import com.epam.javacc.microservices.common.order.event.OrderCreatedEvent;
-import com.epam.javacc.microservices.common.order.event.OrderStatusChangedEvent;
-import com.epam.javacc.microservices.common.order.event.OrderUpdatedEvent;
+import com.epam.javacc.microservices.common.order.event.*;
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
-import com.epam.javacc.microservices.ordercmd.order.command.ChangeOrderStatusCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.AssignOrderInOrderAggregateCommand;
 import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.RevertAssignOrderInOrderAggregateCommand;
 import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
@@ -38,7 +37,7 @@ public class OrderAggregate {
     private String businessKey;
     private String phone;
     private String address;
-    private OrderStatus status;
+    private OrderStatus orderStatus;
 
     public OrderAggregate() {
     }
@@ -57,20 +56,6 @@ public class OrderAggregate {
         apply(new OrderCreatedEvent(command.getOrderId(), command.getBusinessKey(),
                 command.getPhone(), command.getAddress(), command.getStatus()));
     }
-
-    @CommandHandler
-    public void handle(UpdateOrderCommand command) {
-        LOG.debug("Command: 'UpdateOrderCommand' received.");
-        apply(new OrderUpdatedEvent(command.getOrderId(), command.getBusinessKey(),
-                command.getPhone(), command.getAddress(), command.getStatus()));
-    }
-
-    @CommandHandler
-    public void handle(ChangeOrderStatusCommand command) {
-        LOG.debug("Command: 'ChangeOrdersStatusCommand' received.");
-        apply(new OrderStatusChangedEvent(command.getOrderId(), command.getStatus(), command.getTransactionId()));
-    }
-
     /**
      * This method is marked as an EventSourcingHandler and is therefore used by the Axon
      * framework to handle events of the specified type (OrderCreatedEvent). The
@@ -86,8 +71,16 @@ public class OrderAggregate {
         this.businessKey = event.getBusinessKey();
         this.phone = event.getPhone();
         this.address = event.getAddress();
-        this.status = event.getStatus();
-        LOG.debug("Applied: 'OrderCreatedEvent' [{}] -> {}, {}, {}", this.orderId, this.phone, this.address, this.status);
+        this.orderStatus = event.getStatus();
+        LOG.debug("Applied: 'OrderCreatedEvent' [{}] -> {}, {}, {}", this.orderId, this.phone, this.address, this.orderStatus);
+    }
+
+
+    @CommandHandler
+    public void handle(UpdateOrderCommand command) {
+        LOG.debug("Command: 'UpdateOrderCommand' received.");
+        apply(new OrderUpdatedEvent(command.getOrderId(), command.getBusinessKey(),
+                command.getPhone(), command.getAddress(), command.getStatus()));
     }
 
     @EventSourcingHandler
@@ -95,14 +88,43 @@ public class OrderAggregate {
         this.businessKey = event.getBusinessKey();
         this.phone = event.getPhone();
         this.address = event.getAddress();
-        this.status = event.getStatus();
-        LOG.debug("Applied: 'OrderUpdatedEvent' [{}] -> {}, {}, {}", this.orderId, this.phone, this.address, this.status);
+        this.orderStatus = event.getStatus();
+        LOG.debug("Applied: 'OrderUpdatedEvent' [{}] -> {}, {}, {}", this.orderId, this.phone, this.address, this.orderStatus);
+    }
+
+
+    @CommandHandler
+    public void handle(AssignOrderInOrderAggregateCommand command) {
+        LOG.debug("Command: 'AssignOrderInOrderAggregateCommand' received.");
+        if (orderStatus == OrderStatus.PUBLISHED) {
+            apply(new AssignOrderInOrderAggregateSuccessEvent(command.getOrderId(), command.getDriverId(), command.getAssignmentId()));
+        } else {
+            apply(new AssignOrderInOrderAggregateRejectedEvent(command.getOrderId(), command.getDriverId(), command.getAssignmentId()));
+        }
     }
 
     @EventSourcingHandler
-    public void on(OrderStatusChangedEvent event) {
-        this.status = event.getStatus();
-        LOG.debug("Applied: 'OrderStatusChangedEvent' [{}] -> {}", this.orderId, this.getStatus());
+    public void on(AssignOrderInOrderAggregateSuccessEvent event) {
+        this.orderStatus = OrderStatus.ASSIGNED_TO_DRIVER;
+        LOG.debug("Applied: 'AssignOrderInOrderAggregateSuccessEvent' [{}] -> {}", this.orderId, this.orderStatus);
+    }
+
+    @EventSourcingHandler
+    public void on(AssignOrderInOrderAggregateRejectedEvent event) {
+        LOG.debug("Applied: 'AssignOrderInOrderAggregateRejectedEvent' [{}] -> {}", this.orderId, this.orderStatus);
+    }
+
+
+    @CommandHandler
+    public void handle(RevertAssignOrderInOrderAggregateCommand command) {
+        LOG.debug("Command: 'RevertAssignOrderInOrderAggregateCommand' received.");
+        apply(new AssignOrderInOrderAggregateRevertedEvent(command.getOrderId(), command.getDriverId(), command.getAssignmentId()));
+    }
+
+    @EventSourcingHandler
+    public void on(AssignOrderInOrderAggregateRevertedEvent event) {
+        this.orderStatus = OrderStatus.PUBLISHED;
+        LOG.debug("Applied: 'AssignOrderInOrderAggregateRevertedEvent' [{}] -> {}", this.orderId, this.orderStatus);
     }
 
 
@@ -122,7 +144,7 @@ public class OrderAggregate {
         return address;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 }
