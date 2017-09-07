@@ -1,5 +1,6 @@
 ###About
-This is a simple prototype of application based on CQRS and Event Sourcing architecture.
+
+This is a simple prototype of an application based on CQRS and Event Sourcing architecture.
 
 
 The application consists of the following services:
