@@ -9,6 +9,8 @@ public class DriverOrderChangedEvent implements Serializable {
 
     private String driverId;
     private String assignedOrderId;
+
+    //TODO Remove?
     private String transactionId;
 
     public DriverOrderChangedEvent() {

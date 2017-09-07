@@ -16,9 +16,14 @@ public class CreateDriverCommand {
     private String fullName;
 
 
-    public CreateDriverCommand(String driverId, String name) {
-        this.driverId = (driverId == null ? UUID.randomUUID().toString() : driverId);
-        this.fullName = name;
+    public CreateDriverCommand(String fullName) {
+        this.driverId = UUID.randomUUID().toString();
+        this.fullName = fullName;
+    }
+
+    public CreateDriverCommand(String driverId, String fullName) {
+        this.driverId = driverId;
+        this.fullName = fullName;
     }
 
     public String getDriverId() {

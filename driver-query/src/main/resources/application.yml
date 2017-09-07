@@ -1,0 +1,35 @@
+logging:
+  level:
+    com:
+      epam: DEBUG
+#    org:
+#      axonframework: DEBUG
+
+server:
+  port: 9001
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: driver-query
+  rabbitmq:
+    host: ${rabbitmq-host}
+  h2:
+    console:
+      enabled: true
+
+
+axon:
+  eventhandling:
+    processors:
+      taxiExchange:
+        source: taxiExchange
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://${discovery-host}:8761/eureka/

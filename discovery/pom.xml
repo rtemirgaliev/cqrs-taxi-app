@@ -39,6 +39,8 @@
 		</dependency>
 	</dependencies>
 
+
+	<!--TODO remove?-->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

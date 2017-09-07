@@ -36,7 +36,7 @@ public class DriverController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public CompletableFuture<String> create(@RequestBody CreateDriverRequest request) {
         LOG.debug("CreateDriverRequest request received: " + request.toString());
-        CreateDriverCommand command = new CreateDriverCommand(null, request.getFullName());
+        CreateDriverCommand command = new CreateDriverCommand(request.getFullName());
         return commandGateway.send(command);
     }
 
@@ -65,7 +65,7 @@ public class DriverController {
     public CompletableFuture<String> assignOrder(@PathVariable String driverId, @RequestBody AssignOrderRequest request) {
         LOG.debug("AssignOrderRequest received: " + request.toString());
         StartOrderAssignmentCommand command =
-                new StartOrderAssignmentCommand(null, request.getOrderId(), driverId);
+                new StartOrderAssignmentCommand(request.getOrderId(), driverId);
         return commandGateway.send(command);
     }
 

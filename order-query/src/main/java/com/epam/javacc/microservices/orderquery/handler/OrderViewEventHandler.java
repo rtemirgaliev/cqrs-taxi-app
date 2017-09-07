@@ -1,8 +1,10 @@
 package com.epam.javacc.microservices.orderquery.handler;
 
+import com.epam.javacc.microservices.common.order.event.AssignOrderInOrderAggregateSuccessEvent;
 import com.epam.javacc.microservices.common.order.event.OrderCreatedEvent;
 import com.epam.javacc.microservices.common.order.event.OrderStatusChangedEvent;
 import com.epam.javacc.microservices.common.order.event.OrderUpdatedEvent;
+import com.epam.javacc.microservices.common.order.model.OrderStatus;
 import com.epam.javacc.microservices.orderquery.domain.Order;
 import com.epam.javacc.microservices.orderquery.repository.OrderRepository;
 import org.axonframework.config.ProcessingGroup;
@@ -42,10 +44,10 @@ public class OrderViewEventHandler {
     }
 
     @EventHandler
-    public void handle(OrderStatusChangedEvent event) {
-        LOG.info("OrderStatusChangedEvent: [{}] ", event.getOrderId());
+    public void handle(AssignOrderInOrderAggregateSuccessEvent event) {
+        LOG.info("AssignOrderInOrderAggregateSuccessEvent: [{}] ", event.getOrderId());
         Order order = orderRepository.findOne(event.getOrderId());
-        order.setStatus(event.getStatus());
+        order.setStatus(OrderStatus.ASSIGNED_TO_DRIVER);
         orderRepository.save(order);
     }
 

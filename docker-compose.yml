@@ -8,6 +8,15 @@ services:
     ports:
       - "8761:8761"
 
+  zool:
+    build: zool-gateway
+    container_name: zool
+    ports:
+      - "7777:7777"
+    depends_on:
+        - rabbitmq
+        - discovery
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -21,9 +30,6 @@ services:
     depends_on:
         - rabbitmq
         - discovery
-#    container_name: order-command
-#    ports:
-#      - "9090:9090"
 
   order-query:
     build: order-query
@@ -31,17 +37,16 @@ services:
         - rabbitmq
         - discovery
         - order-command
-#    container_name: order-query
-#    ports:
-#      - "9191:9191"
 
   driver-command:
     build: driver-command
     depends_on:
         - rabbitmq
         - discovery
-#    container_name: driver-command
-#    ports:
-#      - "9292:9292"
 
-
+  driver-query:
+    build: driver-query
+    depends_on:
+        - rabbitmq
+        - discovery
+        - driver-command

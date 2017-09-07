@@ -36,7 +36,6 @@ public class OrderController {
         CreateOrderCommand command = new CreateOrderCommand(request.getBusinessKey(), request.getPhone(),
                 request.getAddress(), request.getStatus());
         LOG.debug(CreateOrderCommand.class.getSimpleName() + " is sending to command gateway: Order [{}]", command.getOrderId());
-        //TODO Move UUID generation to controllers
         return commandGateway.send(command);
     }
 

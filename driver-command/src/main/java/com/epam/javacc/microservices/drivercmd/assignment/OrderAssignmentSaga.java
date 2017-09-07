@@ -27,9 +27,6 @@ public class OrderAssignmentSaga {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderAssignmentSaga.class);
 
-//    private enum OrderStatusChange {STARTED, SUCCESS, REJECTED}
-//    private enum DriverOrderChange {STARTED, SUCCESS, REJECTED}
-
     @Autowired
     private transient CommandGateway commandGateway;
     @Autowired transient EventBus eventBus;
@@ -40,11 +37,6 @@ public class OrderAssignmentSaga {
     private String assignmentId;
     private boolean orderChangedSuccessfully;
     private boolean driverChangedSuccessfully;
-//    private boolean driverAggregateRejectedAssignment;
-//    private boolean orderAggregateRejectedAssignment;
-//    private boolean driverAggregateRevertedAssignment;
-//    private boolean orderAggregateRevertedAssignment;
-
 
     @StartSaga
     @SagaEventHandler(associationProperty = "assignmentId")
@@ -53,11 +45,8 @@ public class OrderAssignmentSaga {
         this.orderId = event.getOrderId();
         this.driverId = event.getDriverId();
         this.assignmentId = event.getAssignmentId();
-        //TODO remove
-//        orderStatusChange = OrderStatusChange.STARTED;
-//        driverOrderChange = DriverOrderChange.STARTED;
-//        commandGateway.send(new AssignOrderInOrderAggregateCommand(event.getAssignmentId(), event.getOrderId(), event.getDriverId()));
-        commandGateway.send(new AssignOrderInDriverAggregateCommand(event.getAssignmentId(), event.getOrderId(), event.getDriverId()));
+        commandGateway.send(new AssignOrderInDriverAggregateCommand(
+                event.getAssignmentId(), event.getOrderId(), event.getDriverId()));
     }
 
 
@@ -81,36 +70,43 @@ public class OrderAssignmentSaga {
         }
     }
 
-    @SagaEventHandler(associationProperty = "assignmentId")
-    public void on(AssignOrderInDriverAggregateRevertedEvent event) {
-        LOG.debug("Applied: 'AssignOrderInDriverAggregateRevertedEvent'", event.getAssignmentId());
-        commandGateway.send(new RejectOrderAssignmentCommand(event.getAssignmentId()));
-        end();
-
-    }
-
-    @SagaEventHandler(associationProperty = "assignmentId")
-    public void on(AssignOrderInOrderAggregateRevertedEvent event) {
-        LOG.debug("Applied: 'AssignOrderInOrderAggregateRevertedEvent'", event.getAssignmentId());
-        commandGateway.send(new RejectOrderAssignmentCommand(event.getAssignmentId()));
-        end();
-    }
-
 
     @SagaEventHandler(associationProperty = "assignmentId")
     public void on(AssignOrderInOrderAggregateRejectedEvent event) {
         LOG.debug("Applied: 'AssignOrderInOrderAggregateRejectedEvent'", event.getAssignmentId());
-
-        commandGateway.send(new RevertAssignOrderInDriverAggregateCommand(event.getAssignmentId(), event.getOrderId(), event.getDriverId()));
+        if (driverChangedSuccessfully) {
+            commandGateway.send(new RevertAssignOrderInDriverAggregateCommand(
+                    event.getAssignmentId(), event.getOrderId(), event.getDriverId()));
+        } else {
+            commandGateway.send(new RejectOrderAssignmentCommand(event.getAssignmentId()));
+            end();
+        }
 
     }
 
     @SagaEventHandler(associationProperty = "assignmentId")
     public void on(AssignOrderInDriverAggregateRejectedEvent event) {
         LOG.debug("Applied: 'AssignOrderInDriverAggregateRejectedEvent'", event.getAssignmentId());
-
-        eventBus.publish(asEventMessage(
-                new RevertAssignOrderInOrderAggregateCommandEvent(event.getAssignmentId(), event.getOrderId(), event.getDriverId())));
+        if (orderChangedSuccessfully) {
+            eventBus.publish(asEventMessage(new RevertAssignOrderInOrderAggregateCommandEvent(
+                    event.getAssignmentId(), event.getOrderId(), event.getDriverId())));
+        } else {
+            commandGateway.send(new RejectOrderAssignmentCommand(event.getAssignmentId()));
+            end();
+        }
     }
 
+    @EndSaga
+    @SagaEventHandler(associationProperty = "assignmentId")
+    public void on(AssignOrderInDriverAggregateRevertedEvent event) {
+        LOG.debug("Applied: 'AssignOrderInDriverAggregateRevertedEvent'", event.getAssignmentId());
+        commandGateway.send(new RejectOrderAssignmentCommand(event.getAssignmentId()));
+    }
+
+    @EndSaga
+    @SagaEventHandler(associationProperty = "assignmentId")
+    public void on(AssignOrderInOrderAggregateRevertedEvent event) {
+        LOG.debug("Applied: 'AssignOrderInOrderAggregateRevertedEvent'", event.getAssignmentId());
+        commandGateway.send(new RejectOrderAssignmentCommand(event.getAssignmentId()));
+    }
 }

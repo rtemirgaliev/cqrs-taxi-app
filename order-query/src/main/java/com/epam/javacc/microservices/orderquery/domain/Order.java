@@ -47,7 +47,6 @@ public class Order {
         this.orderId = orderId;
     }
 
-
     public String getBusinessKey() {
         return businessKey;
     }

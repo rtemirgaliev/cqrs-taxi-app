@@ -11,12 +11,17 @@ public class StartOrderAssignmentCommand {
     private final String orderId;
     private final String driverId;
 
-    public StartOrderAssignmentCommand(String assignmentId, String orderId, String driverId) {
-        this.assignmentId = (assignmentId == null ? UUID.randomUUID().toString() : assignmentId);
+    public StartOrderAssignmentCommand(String orderId, String driverId) {
+        this.assignmentId = UUID.randomUUID().toString();
         this.orderId = orderId;
         this.driverId = driverId;
     }
 
+    public StartOrderAssignmentCommand(String assignmentId, String orderId, String driverId) {
+        this.assignmentId = assignmentId;
+        this.orderId = orderId;
+        this.driverId = driverId;
+    }
 
     public String getAssignmentId() {
         return assignmentId;

@@ -27,7 +27,6 @@ public class CreateOrderCommand {
     @NotNull
     private OrderStatus status;
 
-    //TODO This constructor with ID only need us for test purposes. Consider removing
     public CreateOrderCommand(String orderId, String businessKey, String phone, String address, OrderStatus status) {
         this.orderId = orderId;
         this.businessKey = businessKey;

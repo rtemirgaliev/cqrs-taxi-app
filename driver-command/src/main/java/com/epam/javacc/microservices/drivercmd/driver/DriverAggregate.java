@@ -13,8 +13,6 @@ import org.axonframework.spring.stereotype.Aggregate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
-
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
 @Aggregate
@@ -40,8 +38,8 @@ public class DriverAggregate {
     @EventSourcingHandler
     public void on(DriverCreatedEvent event) {
         this.driverId = event.getDriverId();
-        this.fullName = event.getName();
-        this.driverStatus = event.getStatus();
+        this.fullName = event.getFullName();
+        this.driverStatus = event.getDriverStatus();
         this.assignedOrderId = event.getAssignedOrderId();
         LOG.debug("Applied: 'DriverCreatedEvent' [{}] -> {}, {}, {}", this.driverId, this.fullName, this.driverStatus, this.assignedOrderId);
     }
@@ -94,7 +92,7 @@ public class DriverAggregate {
     public void on(AssignOrderInDriverAggregateRevertedEvent event) {
         this.driverStatus = DriverStatus.EMPTY;
         this.assignedOrderId = null;
-        LOG.debug("Applied: 'AssignOrderInDriverAggregateRevertedEvent' [{}] -> {}, {}", this.driverId, this.driverStatus, this.assignedOrderId);
+        LOG.debug("Applied: 'AssignOrderInDriverAggregateRevertedEvent' [{}] -> {}", this.driverId, this.driverStatus);
     }
 
 

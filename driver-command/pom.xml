@@ -7,7 +7,7 @@
     <artifactId>driver-command</artifactId>
     <packaging>jar</packaging>
     <name>driver-command</name>
-    <description>Taxi Driver Microservice - Command side</description>
+    <description>Driver - Command side</description>
 
     <parent>
         <artifactId>cqrs-taxi-app-parent</artifactId>
@@ -87,7 +87,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
-
 
     </dependencies>
 

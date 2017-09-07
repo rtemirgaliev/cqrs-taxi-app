@@ -48,27 +48,17 @@ public class AxonConfiguration {
         String simpleName = OrderAssignmentSaga.class.getSimpleName();
         AnnotatedSagaRepository sagaRepository = new AnnotatedSagaRepository(OrderAssignmentSaga.class, sagaStore, ri, prf);
         AnnotatedSagaManager sagaManager = new AnnotatedSagaManager(OrderAssignmentSaga.class, sagaRepository, prf);
-
-
         SubscribingEventProcessor sep = new SubscribingEventProcessor(simpleName + "Processor", sagaManager, ms);
-
         sep.registerInterceptor(new TransactionManagingInterceptor(tm));
-
         sep.start();
         return sep;
     }
 
-
-
     @Autowired
     public void configure(EventHandlingConfiguration config, TransactionManager tm) {
 
-        config.registerHandlerInterceptor("taxiExchange", configuration -> {
-            return new TransactionManagingInterceptor(tm);
-
-        });
+        config.registerHandlerInterceptor("taxiExchange", conf -> new TransactionManagingInterceptor(tm));
     }
-
 
     @Bean
     public PlatformTransactionManager platformTransactionManager() {
@@ -91,7 +81,7 @@ public class AxonConfiguration {
     @Bean
     @Qualifier("localSegment")
     public  CommandBus commandBus(TransactionManager transactionManager) {
-//        SimpleCommandBus commandBus = new AsynchronousCommandBus();
+//        SimpleCommandBus commandBus = new SimpleCommandBus();
         AsynchronousCommandBus commandBus = new AsynchronousCommandBus();
         commandBus.registerHandlerInterceptor(new TransactionManagingInterceptor(transactionManager));
         return commandBus;

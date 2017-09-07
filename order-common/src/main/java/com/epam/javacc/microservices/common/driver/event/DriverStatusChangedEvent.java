@@ -10,6 +10,8 @@ public class DriverStatusChangedEvent implements Serializable {
 
     private String driverId;
     private DriverStatus driverStatus;
+
+    //TODO remove?
     private String transactionId;
 
     public DriverStatusChangedEvent() {

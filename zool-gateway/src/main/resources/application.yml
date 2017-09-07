@@ -1,0 +1,43 @@
+logging:
+  level:
+    com:
+      epam: DEBUG
+
+server:
+  port: 7777
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: zool
+  rabbitmq:
+    host: ${rabbitmq-host}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://${discovery-host}:8761/eureka/
+
+zuul:
+  ignoredServices: '*'
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+
+  routes:
+    order-query:
+        path: /order/**
+        serviceId: order-query
+        stripPrefix: false
+        sensitiveHeaders:
+#
+#    account-service:
+#        path: /accounts/**
+#        url: http://auth-service:5000
+#        stripPrefix: false
+#        sensitiveHeaders:
+#

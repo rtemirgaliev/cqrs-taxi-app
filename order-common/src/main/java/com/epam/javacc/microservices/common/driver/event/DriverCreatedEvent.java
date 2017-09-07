@@ -26,10 +26,10 @@ public class DriverCreatedEvent implements Serializable {
     public String getDriverId() {
         return driverId;
     }
-    public String getName() {
+    public String getFullName() {
         return fullName;
     }
-    public DriverStatus getStatus() {
+    public DriverStatus getDriverStatus() {
         return driverStatus;
     }
     public String getAssignedOrderId() {

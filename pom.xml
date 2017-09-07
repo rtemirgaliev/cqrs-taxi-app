@@ -17,6 +17,8 @@
         <module>order-query</module>
         <module>discovery</module>
         <module>driver-command</module>
+        <module>driver-query</module>
+        <module>zool-gateway</module>
     </modules>
 
     <properties>

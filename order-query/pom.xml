@@ -6,7 +6,7 @@
     <artifactId>order-query</artifactId>
     <packaging>jar</packaging>
     <name>order-query</name>
-    <description>CQRS Taxi Orders MS - Query side</description>
+    <description>Order- Query side</description>
 
     <parent>
         <artifactId>cqrs-taxi-app-parent</artifactId>

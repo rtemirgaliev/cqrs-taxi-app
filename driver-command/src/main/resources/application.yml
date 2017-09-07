@@ -6,7 +6,7 @@ logging:
 #      axonframework: DEBUG
 
 server:
-  port: 9292
+  port: 9000
 
 spring:
   output:

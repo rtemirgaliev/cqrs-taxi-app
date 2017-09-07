@@ -8,21 +8,12 @@ import com.epam.javacc.microservices.common.order.model.OrderStatus;
  */
 public class UpdateDriverRequest {
 
-//    private String driverId;
     private String fullName;
     private String driverStatus;
 
 
     public UpdateDriverRequest() {
     }
-
-//    public String getDriverId() {
-//        return driverId;
-//    }
-
-//    public void setDriverId(String driverId) {
-//        this.driverId = driverId;
-//    }
 
     public String getFullName() {
         return fullName;

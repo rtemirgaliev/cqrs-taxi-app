@@ -1,9 +1,5 @@
 package com.epam.javacc.microservices.ordercmd;
 
-import com.epam.javacc.microservices.common.driver.model.DriverStatus;
-import com.epam.javacc.microservices.common.order.model.OrderStatus;
-import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
-import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
