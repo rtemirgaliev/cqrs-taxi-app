@@ -10,7 +10,6 @@ public class Order {
 
     @Id
     private String orderId;
-    private String businessKey;
     private String phone;
     private String address;
     @Enumerated
@@ -22,9 +21,8 @@ public class Order {
     public Order() {
     }
 
-    public Order(String orderId, String businessKey, String phone, String address, OrderStatus status) {
+    public Order(String orderId, String phone, String address, OrderStatus status) {
         this.orderId = orderId;
-        this.businessKey = businessKey;
         this.phone = phone;
         this.address = address;
         this.status = status;
@@ -32,7 +30,6 @@ public class Order {
 
     public Order(OrderCreatedEvent event) {
         this.orderId = event.getOrderId();
-        this.businessKey = event.getBusinessKey();
         this.phone = event.getPhone();
         this.address = event.getAddress();
         this.status = event.getStatus();
@@ -45,14 +42,6 @@ public class Order {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
-    }
-
-    public String getBusinessKey() {
-        return businessKey;
-    }
-
-    public void setBusinessKey(String businessKey) {
-        this.businessKey = businessKey;
     }
 
     public String getPhone() {

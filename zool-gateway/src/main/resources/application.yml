@@ -1,3 +1,6 @@
+taxi:
+  staticResources: ${static-resources}
+
 logging:
   level:
     com:
@@ -30,10 +33,17 @@ zuul:
 
   routes:
     order-query:
-        path: /order/**
+        path: /order-query/**
         serviceId: order-query
-        stripPrefix: false
+        stripPrefix: true
         sensitiveHeaders:
+
+    order-command:
+        path: /order-command/**
+        serviceId: order-command
+        stripPrefix: true
+        sensitiveHeaders:
+
 #
 #    account-service:
 #        path: /accounts/**

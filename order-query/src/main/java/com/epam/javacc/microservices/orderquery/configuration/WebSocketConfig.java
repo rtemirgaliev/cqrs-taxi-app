@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.epam.javacc.microservices.gateway.config;
+package com.epam.javacc.microservices.orderquery.configuration;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -37,6 +36,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
         String rabbitHost = environment.getProperty("spring.rabbitmq.host");
         config.enableStompBrokerRelay("/topic").setRelayHost(rabbitHost);
         config.setApplicationDestinationPrefixes("/app");
+
     }
 
     @Override

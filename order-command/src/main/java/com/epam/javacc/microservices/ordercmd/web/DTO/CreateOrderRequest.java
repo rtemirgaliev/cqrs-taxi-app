@@ -8,22 +8,13 @@ import com.epam.javacc.microservices.common.order.model.OrderStatus;
  */
 public class CreateOrderRequest {
 
-    private String businessKey;
     private String phone;
     private String address;
-    private OrderStatus status;
 
     public CreateOrderRequest() {
     }
 
 
-    public String getBusinessKey() {
-        return businessKey;
-    }
-
-    public void setBusinessKey(String businessKey) {
-        this.businessKey = businessKey;
-    }
 
     public String getPhone() {
         return phone;
@@ -41,11 +32,4 @@ public class CreateOrderRequest {
         this.address = address;
     }
 
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
 }

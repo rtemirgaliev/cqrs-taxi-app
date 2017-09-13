@@ -34,7 +34,6 @@ public class OrderAggregate {
      */
     @AggregateIdentifier
     private String orderId;
-    private String businessKey;
     private String phone;
     private String address;
     private OrderStatus orderStatus;
@@ -53,8 +52,7 @@ public class OrderAggregate {
     @CommandHandler
     public OrderAggregate(CreateOrderCommand command) {
         LOG.debug("Command: 'CreateOrderCommand' received.");
-        apply(new OrderCreatedEvent(command.getOrderId(), command.getBusinessKey(),
-                command.getPhone(), command.getAddress(), command.getStatus()));
+        apply(new OrderCreatedEvent(command.getOrderId(), command.getPhone(), command.getAddress(), command.getStatus()));
     }
     /**
      * This method is marked as an EventSourcingHandler and is therefore used by the Axon
@@ -68,7 +66,6 @@ public class OrderAggregate {
     @EventSourcingHandler
     public void on(OrderCreatedEvent event) {
         this.orderId = event.getOrderId();
-        this.businessKey = event.getBusinessKey();
         this.phone = event.getPhone();
         this.address = event.getAddress();
         this.orderStatus = event.getStatus();
@@ -79,13 +76,11 @@ public class OrderAggregate {
     @CommandHandler
     public void handle(UpdateOrderCommand command) {
         LOG.debug("Command: 'UpdateOrderCommand' received.");
-        apply(new OrderUpdatedEvent(command.getOrderId(), command.getBusinessKey(),
-                command.getPhone(), command.getAddress(), command.getStatus()));
+        apply(new OrderUpdatedEvent(command.getOrderId(), command.getPhone(), command.getAddress(), command.getStatus()));
     }
 
     @EventSourcingHandler
     public void on(OrderUpdatedEvent event) {
-        this.businessKey = event.getBusinessKey();
         this.phone = event.getPhone();
         this.address = event.getAddress();
         this.orderStatus = event.getStatus();
@@ -130,10 +125,6 @@ public class OrderAggregate {
 
     public String getOrderId() {
         return orderId;
-    }
-
-    public String getBusinessKey() {
-        return businessKey;
     }
 
     public String getPhone() {

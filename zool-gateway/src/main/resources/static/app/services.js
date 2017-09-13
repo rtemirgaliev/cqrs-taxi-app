@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('axonBank')
-    .service('BankAccountService', function ($stomp, $q) {
+    .service('BankAccountService', function ($stomp, $q, $http) {
 
         var isConnected = false;
 
@@ -23,13 +23,44 @@ angular.module('axonBank')
                     }
                 });
             },
-            loadBankAccounts: function () {
+//            loadBankAccounts: function () {
+//                return $q(function (resolve, reject) {
+//                    $stomp.subscribe('/app/bank-accounts', function (data) {
+//                        resolve(data);
+//                    });
+//                });
+//            },
+            loadOrderList: function () {
                 return $q(function (resolve, reject) {
-                    $stomp.subscribe('/app/stomp/order', function (data) {
-                        resolve(data);
-                    });
+                    $http.get('/order-query/order')
+                        .success(function (data) {
+                            console.log('Success:');
+                            console.log(data);
+                            resolve(data);
+                        })
+                        .error(function (data, status) {
+                            console.log('Error:');
+                            console.log(status);
+                        });
                 });
             },
+            createOrder: function (order) {
+                return $q(function (resolve, reject) {
+                    $http.post('/order-command/order', order, {transformResponse: function(resp) {return resp;} })
+                                                                //{headers: {'Content-Type': 'application/json'}}
+                        .success(function (data) {
+                            console.log('Success:');
+                            console.log(data);
+                            resolve(data);
+                        })
+                        .error(function (data, status) {
+                            console.log('Error:');
+                            console.log(status);
+                            console.log(data);
+                        });
+                });
+            },
+
             loadBankTransfers: function (bankAccountId) {
                 return $q(function (resolve, reject) {
                     $stomp.subscribe('/app/bank-accounts/' + bankAccountId + '/bank-transfers', function (data) {
@@ -37,9 +68,9 @@ angular.module('axonBank')
                     });
                 });
             },
-            subscribeToBankAccountUpdates: function () {
+            subscribeToOrderListUpdates: function () {
                 var deferred = $q.defer();
-                $stomp.subscribe('/topic/bank-accounts.updates', function (data) {
+                $stomp.subscribe('/topic/order-list.updates', function (data) {
                     deferred.notify(data);
                 });
                 return deferred.promise;

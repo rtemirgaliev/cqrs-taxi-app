@@ -2,14 +2,15 @@
 
 angular.module('axonBank')
     .controller('BankAccountsCtrl', function ($scope, $uibModal, BankAccountService) {
-        function updateBankAccounts(bankAccounts) {
-            $scope.bankAccounts = bankAccounts;
+
+        function updateOrderList(orderList) {
+            $scope.orderList = orderList;
         }
 
         $scope.create = function () {
             $uibModal.open({
-                controller: 'CreateBankAccountModalCtrl',
-                templateUrl: '/app/modals/createBankAccountModal.html',
+                controller: 'CreateOrderModalCtrl',
+                templateUrl: '/app/modals/createOrderModal.html',
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body'
             });
@@ -79,25 +80,25 @@ angular.module('axonBank')
 
         BankAccountService.connect()
             .then(function () {
-                BankAccountService.loadBankAccounts()
-                    .then(updateBankAccounts);
+                BankAccountService.loadOrderList()
+                    .then(updateOrderList);
 
-                BankAccountService.subscribeToBankAccountUpdates()
+                BankAccountService.subscribeToOrderListUpdates()
                     .then(function () {
                         // do nothing
                     }, function () {
                         // do nothing
-                    }, updateBankAccounts)
+                    }, updateOrderList)
             });
     })
-    .controller('CreateBankAccountModalCtrl', function ($uibModalInstance, $scope, BankAccountService) {
-        $scope.bankAccount = {};
+    .controller('CreateOrderModalCtrl', function ($uibModalInstance, $scope, BankAccountService) {
+        $scope.order = {};
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss();
         };
         $scope.submit = function () {
-            BankAccountService.createBankAccount($scope.bankAccount);
+            BankAccountService.createOrder($scope.order);
             $uibModalInstance.close();
         };
     })

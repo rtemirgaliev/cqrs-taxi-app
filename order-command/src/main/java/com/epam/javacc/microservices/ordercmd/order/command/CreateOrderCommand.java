@@ -15,9 +15,6 @@ public class CreateOrderCommand {
 
     @TargetAggregateIdentifier
     private String orderId;
-    @NotNull
-    @NotBlank
-    private String businessKey;
     @NotNull(message = "Phone is mandatory")
     @NotBlank(message = "Phone can not be blank")
     private String phone;
@@ -27,28 +24,29 @@ public class CreateOrderCommand {
     @NotNull
     private OrderStatus status;
 
-    public CreateOrderCommand(String orderId, String businessKey, String phone, String address, OrderStatus status) {
+    public CreateOrderCommand(String orderId, String phone, String address, OrderStatus status) {
         this.orderId = orderId;
-        this.businessKey = businessKey;
         this.phone = phone;
         this.address = address;
         this.status = status;
     }
 
-    public CreateOrderCommand(String businessKey, String phone, String address, OrderStatus status) {
+    public CreateOrderCommand(String phone, String address, OrderStatus status) {
         this.orderId = UUID.randomUUID().toString();
-        this.businessKey = businessKey;
         this.phone = phone;
         this.address = address;
         this.status = status;
+    }
+
+    public CreateOrderCommand(String phone, String address) {
+        this.orderId = UUID.randomUUID().toString();
+        this.phone = phone;
+        this.address = address;
+        this.status = OrderStatus.PUBLISHED;
     }
 
     public String getOrderId() {
         return orderId;
-    }
-
-    public String getBusinessKey() {
-        return businessKey;
     }
 
     public String getPhone() {

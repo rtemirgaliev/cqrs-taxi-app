@@ -2,23 +2,28 @@ package com.epam.javacc.microservices.orderquery.controller;
 
 import com.epam.javacc.microservices.orderquery.domain.Order;
 import com.epam.javacc.microservices.orderquery.repository.OrderRepository;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@MessageMapping("/stomp/order")
+import java.util.List;
+
+@RestController
+@RequestMapping("/order")
 public class OrderController {
 
-    private final OrderRepository orderRepository;
+    private OrderRepository repository;
 
-    public OrderController(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
+    public OrderController(OrderRepository repository) {
+        this.repository = repository;
     }
 
-    @SubscribeMapping
-    public Iterable<Order> all() {
-        return orderRepository.findAll();
+
+    @GetMapping
+    public List<Order> all() {
+        return repository.findAll();
     }
+
+
 
 }

@@ -9,7 +9,6 @@ public class OrderUpdatedEvent implements Serializable {
     private static final long serialVersionUID = -3057624125822179714L;
 
     private String orderId;
-    private String businessKey;
     private String phone;
     private String address;
     private OrderStatus status;
@@ -17,9 +16,8 @@ public class OrderUpdatedEvent implements Serializable {
     public OrderUpdatedEvent() {
     }
 
-    public OrderUpdatedEvent(String orderId, String businessKey, String phone, String address, OrderStatus status) {
+    public OrderUpdatedEvent(String orderId, String phone, String address, OrderStatus status) {
         this.orderId = orderId;
-        this.businessKey = businessKey;
         this.phone = phone;
         this.address = address;
         this.status = status;
@@ -29,9 +27,6 @@ public class OrderUpdatedEvent implements Serializable {
         return orderId;
     }
 
-    public String getBusinessKey() {
-        return businessKey;
-    }
 
     public String getPhone() {
         return phone;

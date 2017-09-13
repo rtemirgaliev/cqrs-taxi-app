@@ -17,9 +17,6 @@ public class UpdateOrderCommand {
     @NotNull
     @NotBlank
     private String orderId;
-    @NotNull
-    @NotBlank
-    private String businessKey;
     @NotNull(message = "Phone is mandatory")
     @NotBlank(message = "Phone is mandatory")
     private String phone;
@@ -29,9 +26,8 @@ public class UpdateOrderCommand {
     @NotNull
     private OrderStatus status;
 
-    public UpdateOrderCommand(String orderId, String businessKey, String phone, String address, OrderStatus status) {
+    public UpdateOrderCommand(String orderId, String phone, String address, OrderStatus status) {
         this.orderId = orderId;
-        this.businessKey = businessKey;
         this.phone = phone;
         this.address = address;
         this.status = status;
@@ -39,10 +35,6 @@ public class UpdateOrderCommand {
 
     public String getOrderId() {
         return orderId;
-    }
-
-    public String getBusinessKey() {
-        return businessKey;
     }
 
     public String getPhone() {

@@ -33,8 +33,8 @@ public class OrderController {
     public CompletableFuture<String> create(@RequestBody CreateOrderRequest request) {
         LOG.debug(CreateOrderRequest.class.getSimpleName() + " request received");
 
-        CreateOrderCommand command = new CreateOrderCommand(request.getBusinessKey(), request.getPhone(),
-                request.getAddress(), request.getStatus());
+        CreateOrderCommand command = new CreateOrderCommand(request.getPhone(),
+                request.getAddress());
         LOG.debug(CreateOrderCommand.class.getSimpleName() + " is sending to command gateway: Order [{}]", command.getOrderId());
         return commandGateway.send(command);
     }
@@ -44,7 +44,7 @@ public class OrderController {
     public CompletableFuture<String> update(@RequestBody UpdateOrderRequest request) {
         LOG.debug(UpdateOrderRequest.class.getSimpleName() + " request received");
 
-        UpdateOrderCommand command = new UpdateOrderCommand(request.getOrderId(), request.getBusinessKey(), request.getPhone(),
+        UpdateOrderCommand command = new UpdateOrderCommand(request.getOrderId(), request.getPhone(),
                 request.getAddress(), request.getStatus());
         LOG.debug(UpdateOrderCommand.class.getSimpleName() + " is sending to command gateway: Order [{}]", command.getOrderId());
         return commandGateway.send(command);
