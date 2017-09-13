@@ -42,7 +42,7 @@ public class CreateOrderCommand {
         this.orderId = UUID.randomUUID().toString();
         this.phone = phone;
         this.address = address;
-        this.status = OrderStatus.PUBLISHED;
+        this.status = OrderStatus.NOT_ASSIGNED;
     }
 
     public String getOrderId() {

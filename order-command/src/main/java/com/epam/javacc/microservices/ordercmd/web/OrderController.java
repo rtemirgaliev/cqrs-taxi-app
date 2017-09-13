@@ -1,6 +1,7 @@
 package com.epam.javacc.microservices.ordercmd.web;
 
 import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.DeleteOrderCommand;
 import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
 import com.epam.javacc.microservices.ordercmd.web.DTO.CreateOrderRequest;
 import com.epam.javacc.microservices.ordercmd.web.DTO.UpdateOrderRequest;
@@ -47,6 +48,15 @@ public class OrderController {
         UpdateOrderCommand command = new UpdateOrderCommand(request.getOrderId(), request.getPhone(),
                 request.getAddress(), request.getStatus());
         LOG.debug(UpdateOrderCommand.class.getSimpleName() + " is sending to command gateway: Order [{}]", command.getOrderId());
+        return commandGateway.send(command);
+    }
+
+    @DeleteMapping(value = "/{orderId}")
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    public CompletableFuture<String> delete(@PathVariable String orderId) {
+        LOG.debug("Delete order request received: " + orderId);
+        DeleteOrderCommand command = new DeleteOrderCommand(orderId);
+        LOG.debug(DeleteOrderCommand.class.getSimpleName() + " is sending to command gateway: Order [{}]", command.getOrderId());
         return commandGateway.send(command);
     }
 

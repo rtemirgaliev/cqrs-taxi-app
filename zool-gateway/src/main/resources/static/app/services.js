@@ -46,8 +46,7 @@ angular.module('axonBank')
             },
             createOrder: function (order) {
                 return $q(function (resolve, reject) {
-                    $http.post('/order-command/order', order, {transformResponse: function(resp) {return resp;} })
-                                                                //{headers: {'Content-Type': 'application/json'}}
+                    $http.post('/order-command/order', order, {transformResponse: function(resp) {return resp;} }) //{headers: {'Content-Type': 'application/json'}}
                         .success(function (data) {
                             console.log('Success:');
                             console.log(data);
@@ -60,6 +59,22 @@ angular.module('axonBank')
                         });
                 });
             },
+            deleteOrder: function (orderId) {
+                return $q(function (resolve, reject) {
+                    $http.delete('/order-command/order/'+orderId)
+                        .success(function (data) {
+                            console.log('Success:');
+                            console.log(data);
+                            resolve(data);
+                        })
+                        .error(function (data, status) {
+                            console.log('Error:');
+                            console.log(status);
+                            console.log(data);
+                        });
+                });
+            },
+
 
             loadBankTransfers: function (bankAccountId) {
                 return $q(function (resolve, reject) {

@@ -2,6 +2,7 @@ package com.epam.javacc.microservices.orderquery.handler;
 
 import com.epam.javacc.microservices.common.order.event.AssignOrderInOrderAggregateSuccessEvent;
 import com.epam.javacc.microservices.common.order.event.OrderCreatedEvent;
+import com.epam.javacc.microservices.common.order.event.OrderDeletedEvent;
 import com.epam.javacc.microservices.common.order.event.OrderUpdatedEvent;
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
 import com.epam.javacc.microservices.orderquery.domain.Order;
@@ -29,6 +30,13 @@ public class OrderViewEventHandler {
     public void handle(OrderCreatedEvent event) {
         LOG.info("OrderCreatedEvent: [{}] ", event.getOrderId());
         orderRepository.save(new Order(event));
+        broadcastUpdates();
+    }
+
+    @EventHandler
+    public void handle(OrderDeletedEvent event) {
+        LOG.info("OrderDeletedEvent: [{}] ", event.getOrderId());
+        orderRepository.delete(event.getOrderId());
         broadcastUpdates();
     }
 

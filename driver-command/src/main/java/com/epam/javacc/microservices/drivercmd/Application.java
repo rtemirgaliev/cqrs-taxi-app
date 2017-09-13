@@ -49,10 +49,10 @@ public class Application {
 
 //        commandGateway.send(new CreateDriverCommand("d1", "Speedy Driver"));
 //        commandGateway.send(new ChangeDriverStatusCommand("d1", DriverStatus.EMPTY, "tr999"));
-//        commandGateway.send(new CreateOrderCommand("o1", "new", "111-222", "Red Square", OrderStatus.PUBLISHED));
+//        commandGateway.send(new CreateOrderCommand("o1", "new", "111-222", "Red Square", OrderStatus.NOT_ASSIGNED));
 //        commandGateway.send(new StartOrderAssignmentCommand("a1", "o1", "d1"));
 //
-//        commandGateway.send(new CreateOrderCommand("o2", "new", "333-444", "White House", OrderStatus.PUBLISHED));
+//        commandGateway.send(new CreateOrderCommand("o2", "new", "333-444", "White House", OrderStatus.NOT_ASSIGNED));
 //        commandGateway.send(new StartOrderAssignmentCommand("a2", "o2", "d1"));
 
 

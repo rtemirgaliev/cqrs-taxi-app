@@ -16,6 +16,10 @@ angular.module('axonBank')
             });
         };
 
+        $scope.deleteOrder = function (orderId) {
+            BankAccountService.deleteOrder(orderId);
+        }
+
         $scope.deposit = function (id) {
             $uibModal.open({
                 controller: 'DepositMoneyModalCtrl',

@@ -3,10 +3,7 @@ package com.epam.javacc.microservices.ordercmd.order;
 
 import com.epam.javacc.microservices.common.order.event.*;
 import com.epam.javacc.microservices.common.order.model.OrderStatus;
-import com.epam.javacc.microservices.ordercmd.order.command.AssignOrderInOrderAggregateCommand;
-import com.epam.javacc.microservices.ordercmd.order.command.CreateOrderCommand;
-import com.epam.javacc.microservices.ordercmd.order.command.RevertAssignOrderInOrderAggregateCommand;
-import com.epam.javacc.microservices.ordercmd.order.command.UpdateOrderCommand;
+import com.epam.javacc.microservices.ordercmd.order.command.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -16,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
+import static org.axonframework.commandhandling.model.AggregateLifecycle.markDeleted;
 
 /**
  * Aggregate is an entity or a group of related entities that should be maintained in a consistent state
@@ -72,6 +70,17 @@ public class OrderAggregate {
         LOG.debug("Applied: 'OrderCreatedEvent' [{}] -> {}, {}, {}", this.orderId, this.phone, this.address, this.orderStatus);
     }
 
+    @CommandHandler
+    public void handle(DeleteOrderCommand command) {
+        LOG.debug("Command: 'DeleteOrderCommand' received.");
+        apply(new OrderDeletedEvent(command.getOrderId()));
+    }
+
+    @EventSourcingHandler
+    public void on(OrderDeletedEvent event) {
+        markDeleted();
+        LOG.debug("Applied: 'OrderDeletedEvent' [{}] -> {}", this.orderId);
+    }
 
     @CommandHandler
     public void handle(UpdateOrderCommand command) {
@@ -91,7 +100,7 @@ public class OrderAggregate {
     @CommandHandler
     public void handle(AssignOrderInOrderAggregateCommand command) {
         LOG.debug("Command: 'AssignOrderInOrderAggregateCommand' received.");
-        if (orderStatus == OrderStatus.PUBLISHED) {
+        if (orderStatus == OrderStatus.NOT_ASSIGNED) {
             apply(new AssignOrderInOrderAggregateSuccessEvent(command.getOrderId(), command.getDriverId(), command.getAssignmentId()));
         } else {
             apply(new AssignOrderInOrderAggregateRejectedEvent(command.getOrderId(), command.getDriverId(), command.getAssignmentId()));
@@ -118,7 +127,7 @@ public class OrderAggregate {
 
     @EventSourcingHandler
     public void on(AssignOrderInOrderAggregateRevertedEvent event) {
-        this.orderStatus = OrderStatus.PUBLISHED;
+        this.orderStatus = OrderStatus.NOT_ASSIGNED;
         LOG.debug("Applied: 'AssignOrderInOrderAggregateRevertedEvent' [{}] -> {}", this.orderId, this.orderStatus);
     }
 

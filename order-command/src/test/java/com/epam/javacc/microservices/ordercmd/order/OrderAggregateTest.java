@@ -23,10 +23,10 @@ public class OrderAggregateTest {
     @Test
     public void UpdateOrderCommandGeneratesOrderUpdatedEvent() {
         fixture.given(new OrderCreatedEvent("1", "111-111","addr 1", OrderStatus.NEW))
-                .when(new UpdateOrderCommand("1", "222-222", "addr 2", OrderStatus.IN_PROGESS)
+                .when(new UpdateOrderCommand("1", "222-222", "addr 2", OrderStatus.ASSIGNED_TO_DRIVER)
                         )
                 .expectSuccessfulHandlerExecution()
-                .expectEvents( new OrderUpdatedEvent("1","222-222","addr 2", OrderStatus.IN_PROGESS)
+                .expectEvents( new OrderUpdatedEvent("1","222-222","addr 2", OrderStatus.ASSIGNED_TO_DRIVER)
                 );
     }
 
