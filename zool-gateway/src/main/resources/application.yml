@@ -44,6 +44,19 @@ zuul:
         stripPrefix: true
         sensitiveHeaders:
 
+    driver-query:
+        path: /driver-query/**
+        serviceId: driver-query
+        stripPrefix: true
+        sensitiveHeaders:
+
+    driver-command:
+        path: /driver-command/**
+        serviceId: driver-command
+        stripPrefix: true
+        sensitiveHeaders:
+
+
 #
 #    account-service:
 #        path: /accounts/**

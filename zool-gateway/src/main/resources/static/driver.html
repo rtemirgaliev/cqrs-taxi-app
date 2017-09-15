@@ -13,40 +13,53 @@
     <link rel="stylesheet" href="/app/app.css"/>
 </head>
 
-<body>
+<body ng-controller="BankAccountsCtrl" >
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">Taxi Driver</a>
+            <b class="navbar-brand">Taxi Driver</b>
+            <div ng-if="currentDriver.fullName != undefined" class="pull-right">
+                <span class="navbar-brand"> Driver name: {{currentDriver.fullName}}</span>
+                <span class="navbar-brand"> Status: {{currentDriver.driverStatus}}</span>
+                <button ng-click="goToWork()" class="btn btn-sm btn-success" type="submit">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Go to work
+                </button>
+            </div>
         </div>
     </div>
 </nav>
 
-<div ng-controller="BankAccountsCtrl" class="container">
+<div class="container">
     <div class="col-lg-12">
         <table class="table table-hover table-condensed table-striped">
             <caption>
                 Orders
-                <!--<div class="pull-right">-->
-                    <!--<button ng-click="create()" class="btn btn-sm btn-success" type="submit">-->
-                        <!--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>-->
-                        <!--Create-->
-                    <!--</button>-->
-                <!--</div>-->
+                <div class="pull-right">
+                    <button ng-click="selectDriver()" class="btn btn-sm btn-success" type="submit">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        Select Driver
+                    </button>
+                    <!--<div class="form-group">-->
+                    <!--&lt;!&ndash;<label for="currentDrv">Select Driver</label>&ndash;&gt;-->
+                    <!--<select ng-model="selectedDriver" class="form-control" name="currentDriver" id="currentDrv">-->
+                    <!--<option ng-repeat="driver in driverList" value="{{driver}}">-->
+                    <!--{{driver.fullName}}-->
+                    <!--</option>-->
+                    <!--</select>-->
+                    <!--</div>-->
+                </div>
             </caption>
             <thead>
             <tr>
                 <th>Address</th>
                 <th>Phone</th>
                 <th>Status</th>
-                <th></th>
+                <th>Action</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody ng-if="currentDriver.driverStatus == 'ON_VACATION'">
             <tr ng-repeat="order in orderList">
-                <!--<td>{{bankAccount.axonBankAccountId}}</td>-->
-                <!--<td>{{bankAccount.balance}}</td>-->
-                <!--<td>{{bankAccount.overdraftLimit}}</td>-->
                 <td>{{order.address}}</td>
                 <td>{{order.phone}}</td>
                 <td>{{order.status}}</td>
@@ -80,12 +93,9 @@
 <script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
 <script type="text/javascript" src="/webjars/angular-ui-bootstrap/ui-bootstrap.min.js"></script>
 <script type="text/javascript" src="/webjars/angular-ui-bootstrap/ui-bootstrap-tpls.min.js"></script>
-<!--<script type="text/javascript" src="/webjars/sockjs-client/sockjs.min.js"></script>-->
 <script type="text/javascript" src="/webjars/sockjs-client/1.1.4/dist/sockjs.min.js"></script>
 <script type="text/javascript" src="/webjars/stomp-websocket/lib/stomp.min.js"></script>
 <script type="text/javascript" src="/webjars/ng-stomp/dist/ng-stomp.min.js"></script>
-
-
 
 <script type="text/javascript" src="/app/app.js"></script>
 <script type="text/javascript" src="/app/services.js"></script>

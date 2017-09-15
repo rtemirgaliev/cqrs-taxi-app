@@ -3,11 +3,37 @@
 angular.module('axonBank')
     .controller('BankAccountsCtrl', function ($scope, $uibModal, BankAccountService) {
 
+        $scope.currentDriver = {};
+
         function updateOrderList(orderList) {
             $scope.orderList = orderList;
-        }
+        };
+        function updateDriverList(driverList) {
+            $scope.driverList = driverList;
+        };
 
-        $scope.create = function () {
+        BankAccountService.connect()
+            .then(function () {
+                BankAccountService.loadOrderList().then(updateOrderList);
+
+                BankAccountService.subscribeToOrderListUpdates()
+                    .then(function () {
+                        // do nothing
+                    }, function () {
+                        // do nothing
+                    }, updateOrderList);
+
+                BankAccountService.subscribeToDriverListUpdates()
+                    .then(function () {
+                        // do nothing
+                    }, function () {
+                        // do nothing
+                    }, updateDriverList);
+
+                BankAccountService.loadDriverList().then(updateDriverList);
+            });
+
+        $scope.createOrder = function () {
             $uibModal.open({
                 controller: 'CreateOrderModalCtrl',
                 templateUrl: '/app/modals/createOrderModal.html',
@@ -20,80 +46,35 @@ angular.module('axonBank')
             BankAccountService.deleteOrder(orderId);
         }
 
-        $scope.deposit = function (id) {
-            $uibModal.open({
-                controller: 'DepositMoneyModalCtrl',
-                templateUrl: '/app/modals/depositMoneyModal.html',
+        $scope.selectDriver = function () {
+            var modalInstance = $uibModal.open({
+                controller: 'SelectDriverModalCtrl',
+                templateUrl: '/app/modals/selectDriverModal.html',
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
                 resolve: {
-                    bankAccountId: function () {
-                        return id;
-                    }
-                }
-            });
-        };
-
-        $scope.withdraw = function (id) {
-            $uibModal.open({
-                controller: 'WithdrawMoneyModalCtrl',
-                templateUrl: '/app/modals/withdrawMoneyModal.html',
-                ariaLabelledBy: 'modal-title',
-                ariaDescribedBy: 'modal-body',
-                resolve: {
-                    bankAccountId: function () {
-                        return id;
-                    }
-                }
-            });
-        };
-
-        $scope.transfer = function (id) {
-            $uibModal.open({
-                controller: 'TransferMoneyModalCtrl',
-                templateUrl: '/app/modals/transferMoneyModal.html',
-                ariaLabelledBy: 'modal-title',
-                ariaDescribedBy: 'modal-body',
-                resolve: {
-                    bankAccountId: function () {
-                        return id;
+                    driverList: function () {
+                        return $scope.driverList;
                     },
-                    bankAccounts: function () {
-                        return $scope.bankAccounts;
+                    currentDriver: function() {
+                        return $scope.currentDriver;
                     }
                 }
             });
-        };
-
-        $scope.bankTransfers = function (id) {
-            $uibModal.open({
-                controller: 'BankTransfersModalCtrl',
-                templateUrl: '/app/modals/bankTransfersModal.html',
-                ariaLabelledBy: 'modal-title',
-                ariaDescribedBy: 'modal-body',
-                resolve: {
-                    bankAccountId: function () {
-                        return id;
-                    },
-                    bankTransfers: function () {
-                        return BankAccountService.loadBankTransfers(id);
-                    }
-                }
+            modalInstance.result.then(function (selectedDriver) {
+//                $scope.currentDriver = angular.fromJson(selectedDriver);
+                var selectedDriverObj = angular.fromJson(selectedDriver);
+                $scope.currentDriver = $scope.driverList.findIndex( function(element) { return element.driverId == selectedDriverObj.driverId } );
+                console.log("result:" + $scope.currentDriver);
+            }, function () {
+                console.log("Error in modalInstance.result" + selectedDriver);
             });
         };
+        $scope.goToWork = function () {
+            BankAccountService.goToWork();
+        }
 
-        BankAccountService.connect()
-            .then(function () {
-                BankAccountService.loadOrderList()
-                    .then(updateOrderList);
 
-                BankAccountService.subscribeToOrderListUpdates()
-                    .then(function () {
-                        // do nothing
-                    }, function () {
-                        // do nothing
-                    }, updateOrderList)
-            });
     })
     .controller('CreateOrderModalCtrl', function ($uibModalInstance, $scope, BankAccountService) {
         $scope.order = {};
@@ -106,53 +87,68 @@ angular.module('axonBank')
             $uibModalInstance.close();
         };
     })
-    .controller('DepositMoneyModalCtrl', function ($uibModalInstance, $scope, BankAccountService, bankAccountId) {
-        $scope.deposit = {
-            bankAccountId: bankAccountId
-        };
+    .controller('SelectDriverModalCtrl', function ($uibModalInstance, $scope, BankAccountService, driverList, currentDriver) {
+        $scope.driverList = driverList;
+        $scope.selectedDriver = {};
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss();
         };
         $scope.submit = function () {
-            BankAccountService.deposit($scope.deposit);
-            $uibModalInstance.close();
+            $uibModalInstance.close($scope.selectedDriver);
         };
-    })
-    .controller('WithdrawMoneyModalCtrl', function ($uibModalInstance, $scope, BankAccountService, bankAccountId) {
-        $scope.withdrawal = {
-            bankAccountId: bankAccountId
-        };
+    });
 
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss();
-        };
-        $scope.submit = function () {
-            BankAccountService.withdraw($scope.withdrawal);
-            $uibModalInstance.close();
-        };
-    })
-    .controller('TransferMoneyModalCtrl',
-        function ($uibModalInstance, $scope, BankAccountService, bankAccountId, bankAccounts) {
-            $scope.bankAccounts = bankAccounts;
-            $scope.bankTransfer = {
-                sourceBankAccountId: bankAccountId
-            };
+//    .controller('WithdrawMoneyModalCtrl', function ($uibModalInstance, $scope, BankAccountService, bankAccountId) {
+//        $scope.withdrawal = {
+//            bankAccountId: bankAccountId
+//        };
+//
+//        $scope.cancel = function () {
+//            $uibModalInstance.dismiss();
+//        };
+//        $scope.submit = function () {
+//            BankAccountService.withdraw($scope.withdrawal);
+//            $uibModalInstance.close();
+//        };
+//    })
+//    .controller('TransferMoneyModalCtrl',
+//        function ($uibModalInstance, $scope, BankAccountService, bankAccountId, bankAccounts) {
+//            $scope.bankAccounts = bankAccounts;
+//            $scope.bankTransfer = {
+//                sourceBankAccountId: bankAccountId
+//            };
+//
+//            $scope.cancel = function () {
+//                $uibModalInstance.dismiss();
+//            };
+//            $scope.submit = function () {
+//                BankAccountService.transfer($scope.bankTransfer);
+//                $uibModalInstance.close();
+//            };
+//        })
+//    .controller('BankTransfersModalCtrl',
+//        function ($uibModalInstance, $scope, BankAccountService, bankAccountId, bankTransfers) {
+//            $scope.bankAccountId = bankAccountId;
+//            $scope.bankTransfers = bankTransfers;
+//
+//            $scope.close = function () {
+//                $uibModalInstance.close();
+//            };
+//        });
 
-            $scope.cancel = function () {
-                $uibModalInstance.dismiss();
-            };
-            $scope.submit = function () {
-                BankAccountService.transfer($scope.bankTransfer);
-                $uibModalInstance.close();
-            };
-        })
-    .controller('BankTransfersModalCtrl',
-        function ($uibModalInstance, $scope, BankAccountService, bankAccountId, bankTransfers) {
-            $scope.bankAccountId = bankAccountId;
-            $scope.bankTransfers = bankTransfers;
 
-            $scope.close = function () {
-                $uibModalInstance.close();
-            };
-        });
+//        $scope.deposit = function (id) {
+//            $uibModal.open({
+//                controller: 'DepositMoneyModalCtrl',
+//                templateUrl: '/app/modals/depositMoneyModal.html',
+//                ariaLabelledBy: 'modal-title',
+//                ariaDescribedBy: 'modal-body',
+//                resolve: {
+//                    bankAccountId: function () {
+//                        return id;
+//                    }
+//                }
+//            });
+//        };
+//
