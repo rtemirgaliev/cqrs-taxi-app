@@ -4,18 +4,32 @@ angular.module('axonBank')
     .controller('BankAccountsCtrl', function ($scope, $uibModal, BankAccountService) {
 
         $scope.currentDriver = {};
+        $scope.currentOrder = {};
 
         function updateOrderList(orderList) {
             $scope.orderList = orderList;
         };
         function updateDriverList(driverList) {
             $scope.driverList = driverList;
+            if ($scope.currentDriver.driverId != 'undefined') {
+//                var currentDriverIndex = $scope.driverList.findIndex( function(element) { return element.driverId == $scope.currentDriver.driverId } )
+//                $scope.currentDriver = $scope.driverList[currentDriverIndex];
+                $scope.currentDriver = $scope.driverList.find(
+                    function(element) {
+                        return element.driverId == $scope.currentDriver.driverId;
+                    }
+                )
+                $scope.currentOrder = $scope.orderList.find(
+                    function(element) {
+                        return element.orderId == $scope.currentDriver.assignedOrderId;
+                    }
+                )
+            }
         };
 
         BankAccountService.connect()
             .then(function () {
                 BankAccountService.loadOrderList().then(updateOrderList);
-
                 BankAccountService.subscribeToOrderListUpdates()
                     .then(function () {
                         // do nothing
@@ -23,6 +37,7 @@ angular.module('axonBank')
                         // do nothing
                     }, updateOrderList);
 
+                BankAccountService.loadDriverList().then(updateDriverList);
                 BankAccountService.subscribeToDriverListUpdates()
                     .then(function () {
                         // do nothing
@@ -30,7 +45,6 @@ angular.module('axonBank')
                         // do nothing
                     }, updateDriverList);
 
-                BankAccountService.loadDriverList().then(updateDriverList);
             });
 
         $scope.createOrder = function () {
@@ -62,18 +76,29 @@ angular.module('axonBank')
                 }
             });
             modalInstance.result.then(function (selectedDriver) {
-//                $scope.currentDriver = angular.fromJson(selectedDriver);
-                var selectedDriverObj = angular.fromJson(selectedDriver);
-                $scope.currentDriver = $scope.driverList.findIndex( function(element) { return element.driverId == selectedDriverObj.driverId } );
-                console.log("result:" + $scope.currentDriver);
+                $scope.currentDriver = angular.fromJson(selectedDriver);
             }, function () {
-                console.log("Error in modalInstance.result" + selectedDriver);
+//                console.log("No data");
             });
         };
         $scope.goToWork = function () {
-            BankAccountService.goToWork();
+            var statusObj = {};
+            if ($scope.currentDriver.driverStatus == 'ON_VACATION') {
+                statusObj.driverStatus = "EMPTY";
+                BankAccountService.setDriverStatus($scope.currentDriver.driverId, statusObj);
+            } else if ($scope.currentDriver.driverStatus == 'EMPTY') {
+                statusObj.driverStatus = "ON_VACATION";
+                BankAccountService.setDriverStatus($scope.currentDriver.driverId, statusObj);
+            }
         }
-
+        $scope.pickupOrder = function (order) {
+            var result = BankAccountService.pickupOrder($scope.currentDriver.driverId, order.orderId);
+            console.log("result: ");
+            console.log(result);
+            $scope.currentOrder = order;
+            console.log('currentOrder');
+            console.log($scope.currentOrder);
+        }
 
     })
     .controller('CreateOrderModalCtrl', function ($uibModalInstance, $scope, BankAccountService) {

@@ -11,7 +11,7 @@
                 <label for="currentDrv">Select Driver</label>
                 <select ng-model="selectedDriver" class="form-control" name="currentDriver" id="currentDrv">
                     <option ng-repeat="driver in driverList" value="{{driver}}">
-                        {{driver.fullName}}
+                        {{driver.fullName}}   [{{driver.driverStatus}}]
                     </option>
                 </select>
             </div>

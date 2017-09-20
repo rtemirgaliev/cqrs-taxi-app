@@ -67,9 +67,9 @@ angular.module('axonBank')
                         });
                 });
             },
-            goToWork: function (driverId) {
+            setDriverStatus: function (driverId, statusObj) {
                 return $q(function (resolve, reject) {
-                    $http.put('/driver-command/driver/' + driverId + '/status', {driverStatus: 'EMPTY'})
+                    $http.put('/driver-command/driver/' + driverId + '/status', statusObj)
                         .success(function (data) {
                             resolve(data);
                         })
@@ -78,17 +78,20 @@ angular.module('axonBank')
                         });
                 });
             },
-
-
-
-
-//            loadBankTransfers: function (bankAccountId) {
-//                return $q(function (resolve, reject) {
-//                    $stomp.subscribe('/app/bank-accounts/' + bankAccountId + '/bank-transfers', function (data) {
-//                        resolve(data);
-//                    });
-//                });
-//            },
+            pickupOrder: function (driverId, orderId) {
+                 console.log('pickup function..');
+                 var orderRequest = {};
+                 orderRequest.orderId = orderId;
+                 return $q(function (resolve, reject) {
+                    $http.post('/driver-command/driver/' + driverId + '/order', orderRequest, {transformResponse: function(resp) {return resp;} })
+                        .success(function (data) {
+                            resolve(orderId);
+                        })
+                        .error(function (data, status) {
+                            console.log(status);
+                        });
+                 });
+            },
             subscribeToOrderListUpdates: function () {
                 var deferred = $q.defer();
                 $stomp.subscribe('/topic/order-list.updates', function (data) {

@@ -11,6 +11,7 @@ import org.axonframework.eventhandling.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
 @ProcessingGroup("taxiExchange")
@@ -21,11 +22,14 @@ public class DriverViewEventHandler {
 
     @Autowired
     private DriverRepository driverRepository;
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
 
     @EventHandler
     public void handle(DriverCreatedEvent event) {
         LOG.info("DriverCreatedEvent: [{}] ", event.getDriverId());
         driverRepository.save(new Driver(event));
+        broadcastUpdates();
     }
 
     @EventHandler
@@ -34,6 +38,7 @@ public class DriverViewEventHandler {
         Driver driver = driverRepository.findOne(event.getDriverId());
         driver.setDriverStatus(event.getDriverStatus());
         driverRepository.save(driver);
+        broadcastUpdates();
     }
 
     @EventHandler
@@ -43,6 +48,11 @@ public class DriverViewEventHandler {
         driver.setDriverStatus(DriverStatus.OCCUPIED);
         driver.setAssignedOrderId(event.getOrderId());
         driverRepository.save(driver);
+        broadcastUpdates();
+    }
+    private void broadcastUpdates() {
+        Iterable<Driver> drivers = driverRepository.findAll();
+        messagingTemplate.convertAndSend("/topic/driver-list.updates", drivers);
     }
 
 }
