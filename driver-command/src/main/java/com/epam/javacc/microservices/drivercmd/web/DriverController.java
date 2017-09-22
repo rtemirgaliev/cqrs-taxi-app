@@ -5,6 +5,7 @@ import com.epam.javacc.microservices.drivercmd.assignment.command.StartOrderAssi
 import com.epam.javacc.microservices.drivercmd.driver.command.ChangeDriverStatusCommand;
 import com.epam.javacc.microservices.drivercmd.driver.command.CreateDriverCommand;
 import com.epam.javacc.microservices.drivercmd.driver.command.UpdateDriverCommand;
+import com.epam.javacc.microservices.drivercmd.finishing.command.StartOrderFinishingCommand;
 import com.epam.javacc.microservices.drivercmd.web.DTO.AssignOrderRequest;
 import com.epam.javacc.microservices.drivercmd.web.DTO.ChangeDriverStatusRequest;
 import com.epam.javacc.microservices.drivercmd.web.DTO.CreateDriverRequest;
@@ -59,13 +60,20 @@ public class DriverController {
 
     }
 
-
     @PostMapping(value = "/{driverId}/order")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public CompletableFuture<String> assignOrder(@PathVariable String driverId, @RequestBody AssignOrderRequest request) {
         LOG.debug("AssignOrderRequest received: " + request.toString());
         StartOrderAssignmentCommand command =
                 new StartOrderAssignmentCommand(request.getOrderId(), driverId);
+        return commandGateway.send(command);
+    }
+
+    @PostMapping(value = "/{driverId}/finish-order")
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    public CompletableFuture<String> finishOrder(@PathVariable String driverId) {
+        LOG.debug("Finish Order Request received for driver: " + driverId);
+        StartOrderFinishingCommand command = new StartOrderFinishingCommand(driverId);
         return commandGateway.send(command);
     }
 

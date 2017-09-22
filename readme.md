@@ -1,5 +1,9 @@
 ###About
 
+
+This text is for previous version of application. Will be redone later.
+
+
 This is a simple prototype of an application based on CQRS and Event Sourcing architecture.
 
 

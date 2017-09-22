@@ -5,25 +5,31 @@ angular.module('axonBank')
 
         $scope.currentDriver = {};
         $scope.currentOrder = {};
+        $scope.orderList = [];
 
         function updateOrderList(orderList) {
             $scope.orderList = orderList;
         };
         function updateDriverList(driverList) {
             $scope.driverList = driverList;
-            if ($scope.currentDriver.driverId != 'undefined') {
-//                var currentDriverIndex = $scope.driverList.findIndex( function(element) { return element.driverId == $scope.currentDriver.driverId } )
-//                $scope.currentDriver = $scope.driverList[currentDriverIndex];
+
+            if (typeof $scope.currentDriver.driverId != 'undefined') {
                 $scope.currentDriver = $scope.driverList.find(
-                    function(element) {
-                        return element.driverId == $scope.currentDriver.driverId;
-                    }
-                )
+                    function(element) { return element.driverId == $scope.currentDriver.driverId; }
+                );
+//                if($scope.currentDriver.assignedOrderId != 'null') {
+//                    $scope.currentOrder = $scope.orderList.find(
+//                        function(element) { return element.orderId == $scope.currentDriver.assignedOrderId; }
+//                    );
+//                }
+                updateCurrentOrder();
+            }
+        };
+        function updateCurrentOrder() {
+            if($scope.currentDriver.assignedOrderId != 'null') {
                 $scope.currentOrder = $scope.orderList.find(
-                    function(element) {
-                        return element.orderId == $scope.currentDriver.assignedOrderId;
-                    }
-                )
+                    function(element) { return element.orderId == $scope.currentDriver.assignedOrderId; }
+                );
             }
         };
 
@@ -77,6 +83,7 @@ angular.module('axonBank')
             });
             modalInstance.result.then(function (selectedDriver) {
                 $scope.currentDriver = angular.fromJson(selectedDriver);
+                updateCurrentOrder();
             }, function () {
 //                console.log("No data");
             });
@@ -96,6 +103,14 @@ angular.module('axonBank')
             console.log("result: ");
             console.log(result);
             $scope.currentOrder = order;
+            console.log('currentOrder');
+            console.log($scope.currentOrder);
+        }
+        $scope.finishOrder = function (order) {
+            var result = BankAccountService.finishOrder($scope.currentDriver.driverId, order.orderId);
+            console.log("result: ");
+            console.log(result);
+            $scope.currentOrder = null;
             console.log('currentOrder');
             console.log($scope.currentOrder);
         }
